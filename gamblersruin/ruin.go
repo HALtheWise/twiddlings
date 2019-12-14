@@ -5,10 +5,10 @@ import (
 	"math/rand"
 )
 
-type terminationFunc func(TestResult) bool
+type terminationFunc func(testResult) bool
 
-func runSim(startmoney, winchance float64, f terminationFunc) TestResult {
-	result := TestResult{Winnings: startmoney, Numruns: 0}
+func runSim(startmoney, winchance float64, f terminationFunc) testResult {
+	result := testResult{Winnings: startmoney, Numruns: 0}
 	for !f(result) {
 		if rand.Float64() < winchance {
 			// Win!
@@ -23,30 +23,30 @@ func runSim(startmoney, winchance float64, f terminationFunc) TestResult {
 }
 
 func lowerLimit(limit float64) terminationFunc {
-	return func(t TestResult) bool {
+	return func(t testResult) bool {
 		return t.Winnings <= limit
 	}
 }
 
 func upperLimit(limit float64) terminationFunc {
-	return func(t TestResult) bool {
+	return func(t testResult) bool {
 		return t.Winnings >= limit
 	}
 }
 
 func dualLimit(lower, upper float64) terminationFunc {
-	return func(t TestResult) bool {
+	return func(t testResult) bool {
 		return t.Winnings <= lower || t.Winnings >= upper
 	}
 }
 
-type TestResult struct {
+type testResult struct {
 	Winnings float64
 	Numruns  int
 }
 
-func runManySims(startmoney, winchance float64, f terminationFunc, n int) (mean TestResult) {
-	results := make([]TestResult, 0, n)
+func runManySims(startmoney, winchance float64, f terminationFunc, n int) (mean testResult) {
+	results := make([]testResult, 0, n)
 	for i := 0; i < n; i++ {
 		result := runSim(startmoney, winchance, f)
 		results = append(results, result)
